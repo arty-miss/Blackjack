@@ -24,6 +24,12 @@ public class Dealer
         return hand;
     }
 
+    // returns second card for bot inference
+    public Card getCard()
+    {
+        return hand.getCards().get(1);
+    }
+
     // pick up cards until hand value is >= 17
     public void play(Deck deck, int highestValue)
     {

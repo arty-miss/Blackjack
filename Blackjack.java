@@ -11,9 +11,11 @@ public class Blackjack
         System.out.println("=======================================\n");
         System.out.println("\nStarting a new game of blackjack:");
         Player player1 = new Player("Player 1", 100);
-        Player botDumb = new Player("Kenny", 100);
+        Player botDumb = new Player("Kenny", 200); // he needs it
+        Player botSmart = new Player("Elle", 100);
         botDumb.isBot = true;
-        Player[] players = new Player[] {player1, botDumb};
+        botSmart.isBot = true;
+        Player[] players = new Player[] {player1, botDumb, botSmart};
         Dealer dealer = new Dealer();
         boolean playAgain = false;
 
@@ -22,6 +24,9 @@ public class Blackjack
         if (playerInput.nextLine().trim().toUpperCase().equals("Y")) {
             playAgain = true;
         }
+        // get player's name
+        System.out.println("\nWhat is your name?");
+        player1.setName(playerInput.nextLine());
 
         while (playAgain) {
             resetRound(players, dealer);
@@ -117,7 +122,7 @@ public class Blackjack
                             // determine available moves
                             String options = evaluateOptionsToDisplay(player, handIndex);
                             System.out.println(options);
-                            input = getPlayerMove(player, playerInput, options);
+                            input = getPlayerMove(player, playerInput, options, dealer, handIndex);
 
                             if (!"HEDS".contains(input) || input.length() != 1) {
                                 System.out.println("Invalid input!");
@@ -404,12 +409,14 @@ public class Blackjack
             options += "[H]it, [E]nd turn";
         }
 
-        // Double down only available on first hand, at start, with enough cash
+        // double down only available on first hand, at start, with enough cash
         if (handIndex == 0 && player.canDoubleDown && player.getCash() >= player.lastBet) {
             options += ", [D]ouble down";
+        } else if (handIndex == 0) {
+            player.canDoubleDown = false;
         }
 
-        // Split only on first hand with 2 matching cards
+        // split only on first hand with 2 matching cards
         if (handIndex == 0 && currentHand.getCards().size() == 2) {
             Card card1 = currentHand.getCards().get(0);
             Card card2 = currentHand.getCards().get(1);
@@ -520,7 +527,7 @@ public class Blackjack
     public static void printCash(Player[] players)
     {
         for (Player player : players) {
-            if (player.getCash() == 0 && !player.isStartOfRound) {
+            if (player.getCash() <= 0 && !player.isStartOfRound) {
                 System.out.println(player.getName() + " is broke!");
                 player.isBroke = true;
             } else {
@@ -536,24 +543,30 @@ public class Blackjack
      * @param options
      * @return
      */
-    public static String getPlayerMove(Player player, Scanner scanner, String options) {
+    public static String getPlayerMove(Player player, Scanner scanner, String options, Dealer dealer, int handIndex) {
         if (!player.isBot) {
             // human: read from scanner
             return scanner.nextLine().trim().toUpperCase();
         } else {
-            // bot: pick random from available moves
-            List<Character> legalMoves = new ArrayList<>();
-            if (options.contains("[H]")) legalMoves.add('H');
-            if (options.contains("[E]")) legalMoves.add('E');
-            if (options.contains("[D]")) legalMoves.add('D');
-            if (options.contains("[S]")) legalMoves.add('S');
+            // Elle makes informed decisions
+            if (player.getName() == "Elle") {
+                System.out.println(player.getName() + " is making an informed decision...");
+                try { Thread.sleep(2500); } catch (InterruptedException e) {}
+                return player.computeMove(dealer.getCard(), handIndex);
+            } else {
+                // dumb bot: pick random from available moves
+                List<Character> legalMoves = new ArrayList<>();
+                if (options.contains("[H]")) legalMoves.add('H');
+                if (options.contains("[E]")) legalMoves.add('E');
+                if (options.contains("[D]")) legalMoves.add('D');
+                if (options.contains("[S]")) legalMoves.add('S');
 
-            // pick a random one, simulate thinking
-
-            System.out.println(player.getName() + " is thinking really hard...");
-            try { Thread.sleep(4500); } catch (InterruptedException e) {}
-            char choice = legalMoves.get((int)(Math.random() * legalMoves.size()));
-            return String.valueOf(choice);
+                // pick a random move, simulate thinking
+                System.out.println(player.getName() + " is thinking really hard...");
+                try { Thread.sleep(4500); } catch (InterruptedException e) {}
+                char choice = legalMoves.get((int)(Math.random() * legalMoves.size()));
+                return String.valueOf(choice);
+            }
         }
     }
 

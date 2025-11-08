@@ -8,7 +8,7 @@ coded by Art
 
 ## Overview:
 -  Features gorgeous, state-of-the-16k-art computer graphics and riveting gamplay!!!!1!!
--  Play blackjack alongside a bot called Kenny
+-  Play blackjack alongside two bots, Kenny and Elle
 -  Pick up cards to get a value as close as possible to (but not over) 21. 
 -  Face cards(Jack, Queen, King) have values of 10. 
 -  Ace card can have a value of either 1 or 11, depending on circumstance
@@ -24,17 +24,13 @@ coded by Art
 
 ## Gameplay
 -  Press Y to start a game, or N to terminate
+-  Enter your name
 -  Enter a starting bet between 1 and your current cash (starts at $100)
--  You and Kenny receive your respective 2 starting cards; dealer only show 1 of their cards
+-  You and the bot players receive your respective 2 starting cards; dealer only show 1 of their cards
 -  Choose one of your available moves: "[H]it, [E]nd turn, [D]ouble down, [S]plit" until you bust, get a 21, or choose [E]nd turn
--  Wait for Kenny to finish his turn
+-  Wait for Kenny and Elle to finish their turns
 -  Wait for the dealer to reveal their cards
 -  Win (or lose) cash based on the outcome
 -  Press Y to shuffle the deck and bet on a new round, or N to end the game
 -  If you lose all of your money, you can no longer participate in the game. Ctrl+C to end game
-
-## Coming soon:
--  Elle, a smart bot that uses heuristics and evaluation functions to make smart decisions instead of random choices like Kenny. Oh, Kenny
-
-
 
